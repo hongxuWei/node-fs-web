@@ -1,9 +1,15 @@
 import { message } from 'antd';
 import axios from 'axios';
 
-export const instance = axios.create({
+
+export const PAYLOAD = {
+  JSON: Symbol('JSON'),
+  FORM: Symbol('FORM'),
+  URL: Symbol('URL'),
+};
+
+const instance = axios.create({
   baseURL: 'http://localhost/',
-  timeout: 8000,
   headers: { 'x-requested-with': 'XMLHttpRequest' },
 });
 
@@ -56,4 +62,59 @@ instance.interceptors.response.use(
   },
 );
 
-export default instance;
+class Request {
+  common (method, url, data, payloadType, options) {
+    const axiosConfig = {
+      method: method,
+      url: url.replace(/{(\w+)}/g, (a, b) => {
+        const m = data[b];
+        delete data[b];
+        return m;
+      }),
+    };
+
+    if (data) {
+      if (method === 'get' || payloadType === PAYLOAD.URL) {
+        for (const k in data) {
+          if (data.hasOwnProperty(k) && data[k] === '') {
+            data[k] = undefined;
+          }
+        }
+        axiosConfig.params = data;
+      } else {
+        if (payloadType === PAYLOAD.FORM) {
+          const params = new URLSearchParams();
+          Object.keys(data).forEach((key) => {
+            if (data[key] !== undefined) {
+              params.append(key, data[key]);
+            }
+          });
+          axiosConfig.data = params;
+        } else {
+          axiosConfig.data = data;
+        }
+      }
+      if (data._payload) {
+        axiosConfig.data = data._payload;
+      }
+    }
+    return instance({
+      ...axiosConfig,
+      ...options
+    });
+  }
+  get (url, data, payloadType = PAYLOAD.URL, options = {}) {
+    return this.common('get', url, data, payloadType, options);
+  }
+  post (url, data, payloadType = PAYLOAD.JSON, options) {
+    return this.common('post', url, data, payloadType, options);
+  }
+  put (url, data, payloadType = PAYLOAD.URL, options) {
+    return this.common('put', url, data, payloadType, options);
+  }
+  delete (url, data, payloadType = PAYLOAD.JSON, options) {
+    return this.common('delete', url, data, payloadType, options);
+  }
+}
+
+export default new Request();
