@@ -117,10 +117,17 @@
 .dir .dir-control {
   margin-bottom: 8px;
   font-size: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.dir .dir-control .anticon:first-of-type{
-  margin-right: 8px;
+.dir .dir-control .dir-control-right {
+  display: flex;
+  align-items: center;
+}
+
+.dir .dir-control .dir-control-right .dir-control-action{
+  margin-left: 8px;
 }
 
 .dir .dir-control .dir-control-active {

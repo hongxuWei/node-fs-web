@@ -4,12 +4,12 @@ import { useLocation, useHistory } from "react-router-dom";
 
 import {
   UserOutlined,
-  VideoCameraOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 
 const menu = [
   { name: '1', path: "/", icon: <UserOutlined /> },
-  { name: '2', path: "/dir/0", icon: <VideoCameraOutlined /> },
+  { name: '全部文件', path: "/dir/0", icon: <FileTextOutlined /> },
   { name: '3', path: "/about", icon: <UserOutlined /> },
 ];
 
