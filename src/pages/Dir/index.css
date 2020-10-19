@@ -1,0 +1,133 @@
+.dir {
+
+}
+
+.dir .dir-content {
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dir .dir-content.dir-view-as-list {
+  flex-direction: column;
+}
+
+.dir .dir-content.dir-view-as-list .dir-item {
+  box-sizing: content-box;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 0;
+  width: auto;
+  height: 32px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dir .dir-content.dir-view-as-list a:last-of-type .dir-item {
+  border-bottom: none;
+}
+
+.dir .dir-content.dir-view-as-list .dir-item .ficon {
+  width: 30px;
+  height: 30px;
+}
+
+.dir .dir-content.dir-view-as-list .dir-item .name {
+  text-align: left;
+  width: auto;
+  margin-left: 8px;
+}
+
+.dir .dir-content .dir-item {
+  margin: 25px;
+  width: 100px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.dir .dir-content .dir-item .ficon{
+  width: 50px;
+  height: 50px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url(../../imgs/file/file_unknown.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-dir{
+  background-image: url(../../imgs/file/folder.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-video{
+  background-image: url(../../imgs/file/file_video.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-music{
+  background-image: url(../../imgs/file/file_music.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-excel{
+  background-image: url(../../imgs/file/file_excel.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-pdf{
+  background-image: url(../../imgs/file/file_pdf.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-ppt{
+  background-image: url(../../imgs/file/file_ppt.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-word{
+  background-image: url(../../imgs/file/file_word.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-img{
+  background-image: url(../../imgs/file/file_img.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-txt{
+  background-image: url(../../imgs/file/file_txt.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-apple-app{
+  background-image: url(../../imgs/file/file_dmg.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-zip{
+  background-image: url(../../imgs/file/file_zip.png);
+}
+
+.dir .dir-content .dir-item .ficon.icon-code{
+  background-image: url(../../imgs/file/file_code.png);
+}
+
+.dir .dir-content .dir-item .name{
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: #000;
+}
+
+.dir .dir-control {
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+.dir .dir-control .anticon:first-of-type{
+  margin-right: 8px;
+}
+
+.dir .dir-control .dir-control-active {
+  color: #1890ff;
+}
+
+
+.ficon {
+  /* opacity: 0; */
+}

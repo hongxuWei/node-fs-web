@@ -9,7 +9,7 @@ import {
 
 const menu = [
   { name: '1', path: "/", icon: <UserOutlined /> },
-  { name: '2', path: "/users", icon: <VideoCameraOutlined /> },
+  { name: '2', path: "/dir/0", icon: <VideoCameraOutlined /> },
   { name: '3', path: "/about", icon: <UserOutlined /> },
 ];
 

@@ -3,6 +3,7 @@ import Layout from "./Layout";
 import { Switch, Route } from "react-router-dom";
 
 import Home from './pages/FileList';
+import Dir from './pages/Dir';
 import "./App.css";
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
     <div className="App">
       <Layout>
         <Switch>
-          <Route path="/users" component={() => <div>users</div>} />
+          <Route path="/dir/:dirId" component={Dir} />
           <Route path="/about" component={() => <div>about</div>} />
           <Route path="/" component={Home} />
         </Switch>
