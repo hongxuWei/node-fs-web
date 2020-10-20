@@ -1,6 +1,6 @@
 const DEFAULT_EXPIRE_TIME = -1;
 
-export const setLocalData = (key, data, opt = { expire: -1 }) => {
+export const setLocalData = (key, data, opt = { expire: DEFAULT_EXPIRE_TIME }) => {
   let expire = -1;
 
   if (typeof opt.expire == 'number' && opt.expire > 0) {

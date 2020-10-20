@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Tooltip } from 'antd';
-
+import { Tooltip, Checkbox } from 'antd';
+import { VIEW_TYPE_SQUARE, VIEW_TYPE_LIST } from './index';
+import { GLOBAL_CONTEXT, G_KEY_CUSTOMER } from '../../utils/context';
 const DIR = 1;
 
 function getIconClassName (name, type) {
@@ -21,27 +22,37 @@ function getIconClassName (name, type) {
 }
 
 function Item (props) {
+  const isSquare = props.viewType === VIEW_TYPE_SQUARE;
+
+  const global = useContext(GLOBAL_CONTEXT);
   const iconClass = getIconClassName(props.name, props.type);
-  const content = (
-    <div className="dir-item">
-      <div className={iconClass}></div>
-      <Tooltip title={props.name}>
-      <div className="name">{props.name}</div>
-      </Tooltip>
-    </div>
-  );
-  if (props.type === DIR) {
-    return (
-      <Link to={`/dir/${props.id}`}>{content}</Link>
-    );
-  }
 
   const onMenu = (e) => {
     e.preventDefault();
-    console.log(e);
+    const { clientX, clientY, screenX, screenY } = e;
+    global.updateGlobal(G_KEY_CUSTOMER, { clientX, clientY, screenX, screenY, visible: true });
+    console.log({ ...e });
   }
 
-  return <a onContextMenu={onMenu} target="_blank" href={`//localhost/file/${props.id}`}>{content}</a>;
+  const content = (
+    <div onContextMenu={isSquare ? onMenu : undefined} className="dir-item" data-id={props.id} data-type={props.type}>
+      <Checkbox className="dir-item-checkbox"/>
+      <div className={iconClass}></div>
+      <Tooltip title={props.name}>
+        <div className="name">{props.name}</div>
+      </Tooltip>
+    </div>
+  );
+
+  if (isSquare) {
+    return (
+      props.type === DIR
+      ? <Link to={`/dir/${props.id}`}>{content}</Link>
+      : <a href={`//localhost/file/${props.id}`}>{content}</a>
+    );
+  }
+
+  return content;
 }
 
 export default Item;
