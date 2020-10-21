@@ -23,7 +23,7 @@ export default function MySider() {
     selectedKeys.push(m.name);
   }
   return (
-    <Layout.Sider>
+    <Layout.Sider collapsed>
       <Menu selectedKeys={selectedKeys} theme="dark" mode="inline">
         {menu.map((i) => (
           <Menu.Item key={i.name} icon={i.icon} onClick={() => history.push(i.path)}>

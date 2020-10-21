@@ -1,12 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from "react-router-dom";
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(
+
+
+ReactDOM.hydrate(
   <BrowserRouter>
-    <App />
+    <ConfigProvider locale={zhCN}>
+      <App />
+    </ConfigProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

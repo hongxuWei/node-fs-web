@@ -1,4 +1,4 @@
-import axios from './axios';
+import axios, { PAYLOAD } from './axios';
 
 export const getFileList = (data) => axios.get('/file', data);
 export const upload = (data) => axios.post('/file', data);
@@ -7,3 +7,5 @@ export const fastUpload = (data) => axios.post('/file/fast/{md5}', data);
 export const partUploadStart = (data) => axios.post('/file/part/start', data);
 export const partUpload = (data) => axios.post('/file/part/upload/{md5}/{index}', data);
 export const partMerge = (data) => axios.post('/file/part/merge/{md5}', data);
+export const batchDeleteFile = (data) => axios.delete('/file/batch', data, PAYLOAD.URL);
+export const renameFile = (data) => axios.put('/file/{id}/name/{name}', data);

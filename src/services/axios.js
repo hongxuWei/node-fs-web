@@ -32,6 +32,7 @@ instance.interceptors.response.use(
     return res.data.data;
   },
   (error) => {
+    console.log(error)
     if (!error.response) {
       message.error('网络异常,请检查网络');
       return Promise.reject({

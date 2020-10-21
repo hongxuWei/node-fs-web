@@ -21,6 +21,7 @@
   height: 32px;
   padding: 10px 20px 10px 10px;
   border-bottom: 1px solid #f0f0f0;
+  cursor: auto;
 }
 
 .dir .dir-content.dir-view-as-list .dir-item .dir-item-checkbox {
@@ -31,6 +32,11 @@
 .dir .dir-content.dir-view-as-list .dir-item .ficon {
   width: 30px;
   height: 30px;
+}
+.dir .dir-content.dir-view-as-list .dir-item .dir-item-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .dir .dir-content.dir-view-as-list .dir-item .name {
@@ -124,6 +130,15 @@
   font-size: 20px;
   display: flex;
   justify-content: space-between;
+}
+
+.dir .dir-control .dir-control-left {
+  display: flex;
+  padding-left: 10px;
+}
+
+.dir .dir-control .dir-control-left .ant-checkbox {
+  margin-right: 8px;
 }
 
 .dir .dir-control .dir-control-right {

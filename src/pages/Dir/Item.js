@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Tooltip, Checkbox } from 'antd';
 import { VIEW_TYPE_SQUARE, VIEW_TYPE_LIST } from './index';
 import { GLOBAL_CONTEXT, G_KEY_CUSTOMER } from '../../utils/context';
+
 const DIR = 1;
 
 function getIconClassName (name, type) {
@@ -23,6 +24,7 @@ function getIconClassName (name, type) {
 
 function Item (props) {
   const isSquare = props.viewType === VIEW_TYPE_SQUARE;
+  const isList = props.viewType === VIEW_TYPE_LIST;
 
   const global = useContext(GLOBAL_CONTEXT);
   const iconClass = getIconClassName(props.name, props.type);
@@ -33,14 +35,22 @@ function Item (props) {
     global.updateGlobal(G_KEY_CUSTOMER, { clientX, clientY, screenX, screenY, visible: true });
     console.log({ ...e });
   }
-
-  const content = (
-    <div onContextMenu={isSquare ? onMenu : undefined} className="dir-item" data-id={props.id} data-type={props.type}>
-      <Checkbox className="dir-item-checkbox"/>
+  const mainContent = (
+    <>
       <div className={iconClass}></div>
       <Tooltip title={props.name}>
         <div className="name">{props.name}</div>
       </Tooltip>
+    </>
+  );
+  let linkedMainContent = mainContent;
+  if (isList && props.type === DIR) linkedMainContent = <Link className='dir-item-link' to={`/dir/${props.id}`}>{mainContent}</Link>;
+  if (isList && props.type !== DIR) linkedMainContent = <span className="dir-item-link" onClick={() => props.changeSelect(!props.checked)}>{mainContent}</span>;
+
+  const content = (
+    <div onContextMenu={isSquare ? onMenu : undefined} className="dir-item" data-id={props.id} data-type={props.type}>
+      <Checkbox className="dir-item-checkbox" checked={props.checked} onChange={(e) => props.changeSelect(e.target.checked)}/>
+      {linkedMainContent}
     </div>
   );
 
