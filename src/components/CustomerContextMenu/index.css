@@ -1,0 +1,9 @@
+.customer-context-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  z-index: 10000;
+}

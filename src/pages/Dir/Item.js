@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Tooltip, Checkbox } from 'antd';
 import { VIEW_TYPE_SQUARE, VIEW_TYPE_LIST } from './index';
-import { GLOBAL_CONTEXT, G_KEY_CUSTOMER } from '../../utils/context';
+import { GLOBAL_CONTEXT, G_KEY_CUSTOMER_MENUCONTEXT } from '../../utils/context';
 
 const DIR = 1;
 
@@ -13,12 +13,13 @@ function getIconClassName (name, type) {
   if (/(\.mp3)$/.test(name)) return 'ficon icon-music';
   if (/(\.pdf)$/.test(name)) return 'ficon icon-pdf';
   if (/(\.ppt|\.pptx)$/.test(name)) return 'ficon icon-ppt';
-  if (/(\.word)$/.test(name)) return 'ficon icon-word';
+  if (/(\.doc|\.docx)$/.test(name)) return 'ficon icon-word';
   if (/(\.txt)$/.test(name)) return 'ficon icon-txt';
   if (/(\.png|\.jpg|\.jpeg|\.gif)$/.test(name)) return 'ficon icon-img';
   if (/(\.dmg)$/.test(name)) return 'ficon icon-apple-app';
   if (/(\.gz|\.zip)$/.test(name)) return 'ficon icon-zip';
   if (/(\.html|\.js|\.css)$/.test(name)) return 'ficon icon-code';
+  if (/(\.md)$/.test(name)) return 'ficon icon-md';
   return 'ficon';
 }
 
@@ -32,8 +33,7 @@ function Item (props) {
   const onMenu = (e) => {
     e.preventDefault();
     const { clientX, clientY, screenX, screenY } = e;
-    global.updateGlobal(G_KEY_CUSTOMER, { clientX, clientY, screenX, screenY, visible: true });
-    console.log({ ...e });
+    global.updateGlobal(G_KEY_CUSTOMER_MENUCONTEXT, { clientX, clientY, screenX, screenY, visible: true, type: 'dir-list', data: { id: props.id, type: props.type } });
   }
   const mainContent = (
     <>

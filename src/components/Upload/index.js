@@ -62,7 +62,7 @@ async function fastUploadFile (file, md5, data) {
 
 
 export default function MyUpload (props) {
-  props = {
+  const localProps = {
     name: 'file',
     multiple: true,
 
@@ -81,7 +81,9 @@ export default function MyUpload (props) {
         const exitsResult = await fileExits({ md5 });
         // 如果文件存在就快速上传
         if (exitsResult) {
-          fastUploadFile(file, md5, data);
+          fastUploadFile(file, md5, data).then(() => {
+            successCallback(file);
+          }).catch(onError);
           return;
         }
 
@@ -94,14 +96,13 @@ export default function MyUpload (props) {
           formdata.append('file', file);
           upload(formdata).then(() => {
             successCallback(file);
-          }).catch(() => onError());
+          }).catch(onError);
           return;
         }
 
         await partUploadFile(file, md5, data);
         successCallback(file);
       } catch (err) {
-        console.log(err);
         onError();
       }
     },
@@ -112,12 +113,15 @@ export default function MyUpload (props) {
       const { status } = info.file;
       if (status === 'done') {
         message.success(`${info.file.name} 文件上传成功`);
+        if (typeof props.onSuccess === 'function') {
+          props.onSuccess(info.file);
+        }
       }
     },
   };
 
   return (
-    <Dragger {...props}>
+    <Dragger {...localProps}>
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>

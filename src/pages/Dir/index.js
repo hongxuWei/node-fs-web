@@ -3,6 +3,7 @@ import { Button, Empty, Checkbox, Modal, Input, Form, message } from 'antd';
 import { debounce } from 'lodash';
 import { getDir, getDirInfo, addDir, batchDeleteDir, renameDir } from '../../services/dir';
 import { batchDeleteFile, renameFile } from '../../services/common';
+import Upload from '../../components/Upload';
 import DirRedirect from './DirRedirect';
 import Item from './Item';
 import { getLocalData, setLocalData } from '../../utils/local';
@@ -12,6 +13,7 @@ import {
   PlusOutlined,
   DeleteOutlined,
   EditOutlined,
+  CloudUploadOutlined,
 } from "@ant-design/icons";
 import './index.css';
 
@@ -38,6 +40,7 @@ function Dir (props) {
   const [dirInfo, setDirInfo] = useState(defaultDirInfo);
   const [viewType, setViewType] = useState(defaultViewType);
   const [nameModalVisible, setNameModalVisible] = useState(NAME_MODAL_HIDE);
+  const [uploadVisible, setUploadVisible] = useState(false);
   const [selectIndexs, setSelectIndexs] = useState([]);
 
   const [nameForm] = Form.useForm();
@@ -78,7 +81,6 @@ function Dir (props) {
 
   const nameModalOnOk = debounce(async () => {
     let { name } = await nameForm.validateFields()
-    name = encodeURIComponent(name);
     // 新增文件夹
     if (nameModalVisible === NAME_MODAL_ADD_DIR) {
       await addDir({ id: dirId, name });
@@ -87,6 +89,7 @@ function Dir (props) {
       message.success('新增成功');
       return;
     }
+    name = encodeURIComponent(name);
     const { id } = dir[selectIndexs[0]];
     // 修改文件夹名称
     if (nameTipIsDir) {
@@ -140,6 +143,7 @@ function Dir (props) {
           <DirRedirect {...dirInfo}/>
         </div>
         <div className="dir-control-right">
+          <Button type="primary" className="dir-control-action" size="small" icon={<CloudUploadOutlined />} onClick={() => setUploadVisible(true)}>上传</Button>
           <Button type="primary" className="dir-control-action" size="small" icon={<PlusOutlined />} onClick={() => setNameModalVisible(NAME_MODAL_ADD_DIR)}>新增文件夹</Button>
           { singleSelected && <Button type="primary" className="dir-control-action" ghost size="small" icon={<EditOutlined />} onClick={() => setNameModalVisible(NAME_MODAL_RENAME)}>重命名</Button>}
           { hasSelected && <Button onClick={onDelete} danger type="primary" className="dir-control-action" size="small" icon={<DeleteOutlined />}>删除</Button>}
@@ -203,6 +207,17 @@ function Dir (props) {
             />
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        title="上传文件"
+        visible={uploadVisible}
+        okButtonProps={{ style: { display: "none" }}}
+        cancelText="关闭"
+        onCancel={() => {
+          setUploadVisible(false);
+        }}
+      >
+        <Upload dirId={parseInt(dirId)} onSuccess={getDirList}/>
       </Modal>
     </div>
   );

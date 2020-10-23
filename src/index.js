@@ -6,7 +6,7 @@ import zhCN from 'antd/es/locale/zh_CN';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-
+window.addEventListener('contextmenu', (e) => e.preventDefault());
 
 ReactDOM.hydrate(
   <BrowserRouter>

@@ -1,21 +1,47 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Menu, Dropdown } from 'antd';
+import { GLOBAL_CONTEXT } from '../../utils/context';
+import './index.css';
 
 function CustomerContextMenu(props) {
+  const [visible, setVisible] = useState(false);
+  const global = useContext(GLOBAL_CONTEXT);
+  const { data = {} } = global;
+  const { G_KEY_CUSTOMER_MENUCONTEXT = {} } = data;
+
+  useEffect(() => {
+    if (G_KEY_CUSTOMER_MENUCONTEXT.type === 'dir-list') {
+      setVisible(true);
+    }
+  }, [global])
+
+  console.log(G_KEY_CUSTOMER_MENUCONTEXT)
+
   const menu = (
-    <Menu onClick={this.handleMenuClick}>
-      <Menu.Item key="1">Clicking me will not close the menu.</Menu.Item>
-      <Menu.Item key="2">Clicking me will not close the menu also.</Menu.Item>
-      <Menu.Item key="3">Clicking me will close the menu.</Menu.Item>
+    <Menu onClick={(v) => {
+      setVisible(false);
+    }}>
+      <Menu.Item key='preview'>预览</Menu.Item>
+      <Menu.Item key='delete'>删除</Menu.Item>
+      <Menu.Item key='move'>移动</Menu.Item>
     </Menu>
   );
+
   return (
     <Dropdown
       overlay={menu}
-      onVisibleChange={this.handleVisibleChange}
-      visible={this.state.visible}
+      trigger={["click"]}
+      onVisibleChange={(visible) => {
+        if (!visible) setVisible(false);
+      }}
+      visible={visible}
     >
-      <div className="customer-context-menu">
+      <div className="customer-context-menu"
+        style={{
+          left: G_KEY_CUSTOMER_MENUCONTEXT.clientX,
+          top: G_KEY_CUSTOMER_MENUCONTEXT.clientY,
+        }}
+      >
       </div>
     </Dropdown>
   );

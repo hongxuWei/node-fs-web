@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Layout from "./Layout";
 import { Switch, Route } from "react-router-dom";
 import { GLOBAL_CONTEXT } from './utils/context';
-
+import CustomerContextMenu from './components/CustomerContextMenu';
 import Home from './pages/FileList';
 import Dir from './pages/Dir';
 import "./App.css";
@@ -18,15 +18,16 @@ function App() {
 
   return (
     <div className="App">
-      <Layout>
-        <GLOBAL_CONTEXT.Provider value={{ data: global, updateGlobal }}>
+      <GLOBAL_CONTEXT.Provider value={{ data: global, updateGlobal }}>
+        <Layout>
           <Switch>
             <Route path="/dir/:dirId" component={Dir} />
             <Route path="/about" component={() => <div>about</div>} />
             <Route path="/" component={Home} />
           </Switch>
-        </GLOBAL_CONTEXT.Provider>
-      </Layout>
+        </Layout>
+        <CustomerContextMenu />
+      </GLOBAL_CONTEXT.Provider>
     </div>
   );
 }

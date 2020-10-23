@@ -116,6 +116,10 @@
   background-image: url(../../imgs/file/file_code.png);
 }
 
+.dir .dir-content .dir-item .ficon.icon-md{
+  background-image: url(../../imgs/file/file_md.png);
+}
+
 .dir .dir-content .dir-item .name{
   white-space: nowrap;
   width: 100%;
