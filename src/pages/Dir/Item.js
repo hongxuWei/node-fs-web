@@ -3,11 +3,10 @@ import { Link } from 'react-router-dom';
 import { Tooltip, Checkbox } from 'antd';
 import { VIEW_TYPE_SQUARE, VIEW_TYPE_LIST } from './index';
 import { GLOBAL_CONTEXT, G_KEY_CUSTOMER_MENUCONTEXT } from '../../utils/context';
-
-const DIR = 1;
+import { TYPE_DIR } from '../../constances/types';
 
 function getIconClassName (name, type) {
-  if (type === DIR) return 'ficon icon-dir';
+  if (type === TYPE_DIR) return 'ficon icon-dir';
   if (/(\.xlsx|\.xls)$/.test(name)) return 'ficon icon-excel';
   if (/(\.mp4|\.avi)$/.test(name)) return 'ficon icon-video';
   if (/(\.mp3)$/.test(name)) return 'ficon icon-music';
@@ -33,7 +32,7 @@ function Item (props) {
   const onMenu = (e) => {
     e.preventDefault();
     const { clientX, clientY, screenX, screenY } = e;
-    global.updateGlobal(G_KEY_CUSTOMER_MENUCONTEXT, { clientX, clientY, screenX, screenY, visible: true, type: 'dir-list', data: { id: props.id, type: props.type } });
+    global.updateGlobal(G_KEY_CUSTOMER_MENUCONTEXT, { clientX, clientY, screenX, screenY, visible: true, type: 'dir-list', data: { id: props.id, type: props.type, name: props.name }, refresh: props.refresh });
   }
   const mainContent = (
     <>
@@ -44,8 +43,8 @@ function Item (props) {
     </>
   );
   let linkedMainContent = mainContent;
-  if (isList && props.type === DIR) linkedMainContent = <Link className='dir-item-link' to={`/dir/${props.id}`}>{mainContent}</Link>;
-  if (isList && props.type !== DIR) linkedMainContent = <span className="dir-item-link" onClick={() => props.changeSelect(!props.checked)}>{mainContent}</span>;
+  if (isList && props.type === TYPE_DIR) linkedMainContent = <Link className='dir-item-link' to={`/dir/${props.id}`}>{mainContent}</Link>;
+  if (isList && props.type !== TYPE_DIR) linkedMainContent = <span className="dir-item-link" onClick={() => props.changeSelect(!props.checked)}>{mainContent}</span>;
 
   const content = (
     <div onContextMenu={isSquare ? onMenu : undefined} className="dir-item" data-id={props.id} data-type={props.type}>
@@ -56,7 +55,7 @@ function Item (props) {
 
   if (isSquare) {
     return (
-      props.type === DIR
+      props.type === TYPE_DIR
       ? <Link to={`/dir/${props.id}`}>{content}</Link>
       : <a href={`//localhost/file/${props.id}`}>{content}</a>
     );

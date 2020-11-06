@@ -7,6 +7,7 @@ import Upload from '../../components/Upload';
 import DirRedirect from './DirRedirect';
 import Item from './Item';
 import { getLocalData, setLocalData } from '../../utils/local';
+import { TYPE_DIR } from '../../constances/types';
 import {
   AppstoreOutlined,
   BarsOutlined,
@@ -16,8 +17,6 @@ import {
   CloudUploadOutlined,
 } from "@ant-design/icons";
 import './index.css';
-
-const DIR = 1;
 
 const defaultDirInfo = {
   id: 0,
@@ -49,7 +48,7 @@ function Dir (props) {
   const hasSelected = selectIndexs.length > 0;
   const selectedAll = selectIndexs.length === dir.length && dir.length !== 0;
   const singleSelected = selectIndexs.length === 1;
-  const nameTipIsDir = (singleSelected && dir[selectIndexs[0]].type === DIR)|| nameModalVisible === NAME_MODAL_ADD_DIR;
+  const nameTipIsDir = (singleSelected && dir[selectIndexs[0]].type === TYPE_DIR)|| nameModalVisible === NAME_MODAL_ADD_DIR;
 
   const onViewTypeChange = (value) => {
     setLocalData('dirViewType', value);
@@ -110,8 +109,8 @@ function Dir (props) {
     Modal.confirm({
       title: "确认删除这些文件吗，如果删除的是文件夹文件夹下面的文件也会一同删除",
       onOk: async () => {
-        const dirIds = selectIndexs.filter((v) => dir[v].type === DIR).map((v) => dir[v].id);
-        const fileIds = selectIndexs.filter((v) => dir[v].type !== DIR).map((v) => dir[v].id);
+        const dirIds = selectIndexs.filter((v) => dir[v].type === TYPE_DIR).map((v) => dir[v].id);
+        const fileIds = selectIndexs.filter((v) => dir[v].type !== TYPE_DIR).map((v) => dir[v].id);
         if (dirIds.length > 0) {
           await batchDeleteDir({ ids: dirIds.join(',') });
         }
@@ -165,6 +164,7 @@ function Dir (props) {
               {...v}
               viewType={viewType}
               checked={selectIndexs.includes(i)}
+              refresh={getDirList}
               changeSelect={(selected) => {
                 if (selected) {
                   setSelectIndexs([...selectIndexs, i]);
