@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Empty, Checkbox, Modal, Input, Form, message } from 'antd';
-import { debounce } from 'lodash';
-import { getDir, getDirInfo, addDir, batchDeleteDir, renameDir } from '../../services/dir';
-import { batchDeleteFile, renameFile } from '../../services/common';
+import { Button, Empty, Checkbox, Modal, Form } from 'antd';
+import { getDir, getDirInfo } from '../../services/dir';
 import Upload from '../../components/Upload';
+import NameModal from '../../components/biz/NameModal';
 import DirRedirect from './DirRedirect';
 import Item from './Item';
+import { handleDelete } from '../../utils/file';
 import { getLocalData, setLocalData } from '../../utils/local';
-import { TYPE_DIR } from '../../constances/types';
 import {
   AppstoreOutlined,
   BarsOutlined,
@@ -17,6 +16,7 @@ import {
   CloudUploadOutlined,
 } from "@ant-design/icons";
 import './index.css';
+import { ACTION_RENAME, ACTION_ADD } from '../../constances/actions';
 
 const defaultDirInfo = {
   id: 0,
@@ -48,7 +48,7 @@ function Dir (props) {
   const hasSelected = selectIndexs.length > 0;
   const selectedAll = selectIndexs.length === dir.length && dir.length !== 0;
   const singleSelected = selectIndexs.length === 1;
-  const nameTipIsDir = (singleSelected && dir[selectIndexs[0]].type === TYPE_DIR)|| nameModalVisible === NAME_MODAL_ADD_DIR;
+  const singleSelectedInfo = singleSelected ? dir[selectIndexs[0]] : {};
 
   const onViewTypeChange = (value) => {
     setLocalData('dirViewType', value);
@@ -56,6 +56,7 @@ function Dir (props) {
   }
 
   const getDirList = () => {
+    setUploadVisible(false);
     getDir({ id: dirId }).then((res) => {
       setDir(res);
       setSelectIndexs([]);
@@ -78,49 +79,11 @@ function Dir (props) {
     nameForm.resetFields();
   }
 
-  const nameModalOnOk = debounce(async () => {
-    let { name } = await nameForm.validateFields()
-    // 新增文件夹
-    if (nameModalVisible === NAME_MODAL_ADD_DIR) {
-      await addDir({ id: dirId, name });
-      closeNameModal();
-      getDirList();
-      message.success('新增成功');
-      return;
-    }
-    name = encodeURIComponent(name);
-    const { id } = dir[selectIndexs[0]];
-    // 修改文件夹名称
-    if (nameTipIsDir) {
-      await renameDir({ id, name });
-      closeNameModal();
-      getDirList();
-      message.success('修改文件夹名称成功');
-      return;
-    }
-    // 修改文件名称
-    await renameFile({ id, name });
-    closeNameModal();
-    getDirList();
-    message.success('修改文件名称成功');
-  }, 300)
-
   const onDelete = () => {
-    Modal.confirm({
-      title: "确认删除这些文件吗，如果删除的是文件夹文件夹下面的文件也会一同删除",
-      onOk: async () => {
-        const dirIds = selectIndexs.filter((v) => dir[v].type === TYPE_DIR).map((v) => dir[v].id);
-        const fileIds = selectIndexs.filter((v) => dir[v].type !== TYPE_DIR).map((v) => dir[v].id);
-        if (dirIds.length > 0) {
-          await batchDeleteDir({ ids: dirIds.join(',') });
-        }
-        if (fileIds.length > 0) {
-          await batchDeleteFile({ ids: fileIds.join(',') });
-        }
-        getDirList();
-        message.success('删除成功');
-      }
-    })
+    const infoList = selectIndexs.map((v) => ({
+      ...dir[v]
+    }));
+    handleDelete(infoList, getDirList);
   }
 
   return (
@@ -179,35 +142,14 @@ function Dir (props) {
           ))
         }
       </div>
-      <Modal
+      <NameModal
+        id={dirId}
         visible={NAME_MODAL_VISIBLE.includes(nameModalVisible)}
-        title={nameModalVisible === NAME_MODAL_ADD_DIR ? "新增文件夹" : "重命名"}
-        onOk={nameModalOnOk}
         onCancel={closeNameModal}
-        destroyOnClose
-      >
-        <Form
-          form={nameForm}
-        >
-          <Form.Item
-            name="name"
-            label={`文件${nameTipIsDir ? "夹" : ""}名`}
-            rules={[{ required: true, message: `请输入文件${nameTipIsDir ? "夹" : ""}名` }]}
-          >
-            <Input
-              maxLength={nameTipIsDir ? 50 : 100}
-              placeholder={
-                nameTipIsDir ? "请输入 50 字以内的文件夹名称"
-                : "请输入 100 字以内的文件名称"
-              }
-              autoComplete="off"
-              onPressEnter={nameModalOnOk}
-              autoFocus
-              allowClear
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
+        callback={getDirList}
+        mode={nameModalVisible === NAME_MODAL_ADD_DIR ? ACTION_ADD : ACTION_RENAME}
+        {...singleSelectedInfo}
+      />
       <Modal
         title="上传文件"
         visible={uploadVisible}

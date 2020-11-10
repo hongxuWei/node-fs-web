@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Form, Input, message } from "antd";
 import { debounce } from 'lodash';
 import { ACTION_ADD, ACTION_RENAME } from '../../../constances/actions';
@@ -6,26 +6,21 @@ import { TYPE_DIR } from '../../../constances/types';
 import { addDir, renameDir } from '../../../services/dir';
 import { renameFile } from '../../../services/common';
 
-function useNameModal(props) {
-  const { type, id, name = '', mode, visible = false, callback } = props;
-  const [modalVisible, setModalVisible] = useState(visible);
+function NameModal(props) {
+  const { type, id, name = '', mode, visible = false, callback, onCancel } = props;
   const [nameForm] = Form.useForm();
 
-  const actions = {
-    show: () => setModalVisible(true),
-    hide: () => {
-      setModalVisible(false);
-      nameForm.resetFields();
-    },
-  };
+  useEffect(() => {
+    nameForm.setFieldsValue({ name });
+  }, [type, id, name]);
 
   const isDir = type === TYPE_DIR;
   const nameModalOnOk = debounce(async () => {
     let { name } = await nameForm.validateFields()
     // 新增文件夹
-    if (isDir && mode === ACTION_ADD) {
+    if (mode === ACTION_ADD) {
       await addDir({ id, name });
-      actions.hide();
+      onCancel();
       callback();
       message.success('新增成功');
       return;
@@ -34,24 +29,23 @@ function useNameModal(props) {
     // 修改文件夹名称
     if (isDir) {
       await renameDir({ id, name });
-      actions.hide();
+      onCancel();
       callback();
       message.success('修改文件夹名称成功');
       return;
     }
     // 修改文件名称
     await renameFile({ id, name });
-    actions.hide();
+    onCancel();
     callback();
     message.success('修改文件名称成功');
   }, 300)
-
-  const modal = (
+  return (
     <Modal
-      visible={modalVisible}
+      visible={visible}
       title={mode === ACTION_RENAME ? "重命名" : "新增文件夹"}
       onOk={nameModalOnOk}
-      onCancel={actions.hide}
+      onCancel={onCancel}
       destroyOnClose
     >
       <Form
@@ -78,7 +72,6 @@ function useNameModal(props) {
       </Form>
     </Modal>
   );
-  return [modal, { ...actions }];
 }
 
-export default useNameModal;
+export default NameModal;

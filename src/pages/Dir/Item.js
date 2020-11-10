@@ -5,20 +5,20 @@ import { VIEW_TYPE_SQUARE, VIEW_TYPE_LIST } from './index';
 import { GLOBAL_CONTEXT, G_KEY_CUSTOMER_MENUCONTEXT } from '../../utils/context';
 import { TYPE_DIR } from '../../constances/types';
 
-function getIconClassName (name, type) {
+function getIconClassName (ext, type) {
   if (type === TYPE_DIR) return 'ficon icon-dir';
-  if (/(\.xlsx|\.xls)$/.test(name)) return 'ficon icon-excel';
-  if (/(\.mp4|\.avi)$/.test(name)) return 'ficon icon-video';
-  if (/(\.mp3)$/.test(name)) return 'ficon icon-music';
-  if (/(\.pdf)$/.test(name)) return 'ficon icon-pdf';
-  if (/(\.ppt|\.pptx)$/.test(name)) return 'ficon icon-ppt';
-  if (/(\.doc|\.docx)$/.test(name)) return 'ficon icon-word';
-  if (/(\.txt)$/.test(name)) return 'ficon icon-txt';
-  if (/(\.png|\.jpg|\.jpeg|\.gif)$/.test(name)) return 'ficon icon-img';
-  if (/(\.dmg)$/.test(name)) return 'ficon icon-apple-app';
-  if (/(\.gz|\.zip)$/.test(name)) return 'ficon icon-zip';
-  if (/(\.html|\.js|\.css)$/.test(name)) return 'ficon icon-code';
-  if (/(\.md)$/.test(name)) return 'ficon icon-md';
+  if (/(\.xlsx|\.xls)$/.test(ext)) return 'ficon icon-excel';
+  if (/(\.mp4|\.avi)$/.test(ext)) return 'ficon icon-video';
+  if (/(\.mp3)$/.test(ext)) return 'ficon icon-music';
+  if (/(\.pdf)$/.test(ext)) return 'ficon icon-pdf';
+  if (/(\.ppt|\.pptx)$/.test(ext)) return 'ficon icon-ppt';
+  if (/(\.doc|\.docx)$/.test(ext)) return 'ficon icon-word';
+  if (/(\.txt)$/.test(ext)) return 'ficon icon-txt';
+  if (/(\.png|\.jpg|\.jpeg|\.gif)$/.test(ext)) return 'ficon icon-img';
+  if (/(\.dmg)$/.test(ext)) return 'ficon icon-apple-app';
+  if (/(\.gz|\.zip)$/.test(ext)) return 'ficon icon-zip';
+  if (/(\.html|\.js|\.css)$/.test(ext)) return 'ficon icon-code';
+  if (/(\.md)$/.test(ext)) return 'ficon icon-md';
   return 'ficon';
 }
 
@@ -27,18 +27,18 @@ function Item (props) {
   const isList = props.viewType === VIEW_TYPE_LIST;
 
   const global = useContext(GLOBAL_CONTEXT);
-  const iconClass = getIconClassName(props.name, props.type);
+  const iconClass = getIconClassName(props.ext, props.type);
 
   const onMenu = (e) => {
     e.preventDefault();
     const { clientX, clientY, screenX, screenY } = e;
-    global.updateGlobal(G_KEY_CUSTOMER_MENUCONTEXT, { clientX, clientY, screenX, screenY, visible: true, type: 'dir-list', data: { id: props.id, type: props.type, name: props.name }, refresh: props.refresh });
+    global.updateGlobal(G_KEY_CUSTOMER_MENUCONTEXT, { clientX, clientY, screenX, screenY, visible: true, type: 'dir-list', data: { id: props.id, type: props.type, name: props.name, ext: props.ext }, refresh: props.refresh });
   }
   const mainContent = (
     <>
       <div className={iconClass}></div>
       <Tooltip title={props.name}>
-        <div className="name">{props.name}</div>
+        <div className="name">{props.name}{props.ext || ""}</div>
       </Tooltip>
     </>
   );
