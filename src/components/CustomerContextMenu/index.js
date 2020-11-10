@@ -38,7 +38,6 @@ function CustomerContextMenu(props) {
       <Menu.Item key={ACTION_RENAME}>重命名</Menu.Item>
       <Menu.Item key={ACTION_PREVIEW}>预览</Menu.Item>
       <Menu.Item key={ACTION_DELETE}>删除</Menu.Item>
-      <Menu.Item key={ACTION_MOVE}>移动</Menu.Item>
     </Menu>
   );
   return (

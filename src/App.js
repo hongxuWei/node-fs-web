@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import Layout from "./Layout";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { GLOBAL_CONTEXT } from './utils/context';
 import CustomerContextMenu from './components/CustomerContextMenu';
-import Home from './pages/FileList';
 import Dir from './pages/Dir';
 import "./App.css";
 
@@ -22,8 +21,8 @@ function App() {
         <Layout>
           <Switch>
             <Route path="/dir/:dirId" component={Dir} />
-            <Route path="/about" component={() => <div>about</div>} />
-            <Route path="/" component={Home} />
+            <Route path="/trash/:dirId" component={(props) => <Dir {...props} trash key="trash"/>} />
+            <Redirect from="/" to="/dir/0" exact/>
           </Switch>
         </Layout>
         <CustomerContextMenu />

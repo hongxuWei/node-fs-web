@@ -3,14 +3,13 @@ import { Layout, Menu } from "antd";
 import { useLocation, useHistory } from "react-router-dom";
 
 import {
-  UserOutlined,
   FileTextOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 
 const menu = [
-  { name: '1', path: "/", icon: <UserOutlined /> },
   { name: '全部文件', path: "/dir/0", icon: <FileTextOutlined /> },
-  { name: '3', path: "/about", icon: <UserOutlined /> },
+  { name: '回收站', path: "/trash/0", icon: <DeleteOutlined /> },
 ];
 
 export default function MySider() {
